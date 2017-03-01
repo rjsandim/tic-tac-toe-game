@@ -1,0 +1,25 @@
+{
+  "name": "tic-tac-toe-game",
+  "private": true,
+  "scripts": {
+    "prod": "gulp --production",
+    "dev": "gulp watch",
+    "start": "./node_modules/.bin/webpack-dev-server --port 1991",
+    "watch": "./node_modules/.bin/webpack --port 1991 -w",
+    "deploy": "./node_modules/.bin/webpack --port 1991 -p",
+    "clean": "rm -r ./dist/"
+  },
+  "dependencies": {
+    "@types/jquery": "^2.0.40",
+    "bootstrap": "^3.3.7",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "jquery": "^3.1.1",
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^2.0.0",
+    "typescript": "^2.1.6",
+    "webpack": "^1.13.0"
+  }
+}

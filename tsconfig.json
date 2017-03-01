@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "listFiles": true,
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "baseUrl": "./resources/ts/",
+    "paths": {
+      "*": [
+        "modules/board/select-opponent/*",
+        "core/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "vendor"
+  ]
+}
