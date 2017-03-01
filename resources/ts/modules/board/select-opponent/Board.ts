@@ -43,10 +43,10 @@ export class Board {
 
         $('.btn').click(function () {
 
+            _self.nextPlayerMakeAMove($(this));
+
             if (_self.positions.thereIsAWinner())
-                alert('Winner is: ');
-            else
-                _self.nextPlayerMakeAMove($(this));
+                swal('Winner!');
         });
     }
 

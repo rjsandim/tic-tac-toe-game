@@ -21,9 +21,7 @@ export class Position {
     }
 
     public put(x, y, type: Type) {
-
         this.values[x.toString() + y.toString()] = type;
-
     }
 
     public getAt(x, y): Type {
@@ -31,8 +29,6 @@ export class Position {
     }
 
     public thereIsAWinner(): boolean {
-
-        console.log('thereisawinner');
 
         if (this.checkRows()) {
             return true;
@@ -43,44 +39,70 @@ export class Position {
         }
 
         return this.checkDiagonals();
-
-
     }
 
     private checkRows(): boolean {
 
-        console.log('checkRows');
-
         for (let i = 0; i < this.size; i++) {
 
-            let equals = true;
-            let value = this.values[i + "0"];
+            let positions = [];
 
-            console.log(value);
-
-            for (let j = 1; j < this.size; j++) {
-
-                if (value != this.values[i.toString() + j.toString()]) {
-                    equals = false;
-                }
-
-                console.log(typeof value);
+            for (let j = 0; j < this.size; j++) {
+                positions.push(i.toString() + j.toString());
             }
 
-            if (equals && typeof value !== 'Blank') {
+            if (this.check(positions))
                 return true;
-            }
         }
 
         return false;
     }
 
     private checkCols(): boolean {
+
+        for (let i = 0; i < this.size; i++) {
+
+            let positions = [];
+
+            for (let j = 0; j < this.size; j++) {
+                positions.push(j.toString() + i.toString());
+            }
+
+            if (this.check(positions))
+                return true;
+        }
+
         return false;
     }
 
     private checkDiagonals(): boolean {
-        return false;
+
+        let diagonals = {
+            first: ['00', '11', '22'],
+            second: ['02', '11', '20']
+        };
+
+        if (this.check(diagonals.first))
+            return true;
+
+        return this.check(diagonals.second);
+    }
+
+    private check(positions: any) {
+
+        let hasWinner = true;
+        let firstValue = this.values[positions[0]];
+
+        for (let position of positions) {
+
+            let value = this.values[position];
+
+            if (firstValue != value || value instanceof Blank) {
+                hasWinner = false;
+            }
+        }
+
+        return hasWinner;
     }
 
 }

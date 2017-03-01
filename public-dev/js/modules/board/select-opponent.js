@@ -45,6 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Board_1 = __webpack_require__(1);
 	var board = new Board_1.Board();
 	board.boostrap();
@@ -55,6 +56,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Position_1 = __webpack_require__(2);
 	var Blank_1 = __webpack_require__(3);
 	var Leaf_1 = __webpack_require__(4);
@@ -84,10 +86,9 @@
 	    Board.prototype.onClick = function () {
 	        var _self = this;
 	        $('.btn').click(function () {
+	            _self.nextPlayerMakeAMove($(this));
 	            if (_self.positions.thereIsAWinner())
-	                alert('Winner is: ');
-	            else
-	                _self.nextPlayerMakeAMove($(this));
+	                swal('Winner!');
 	        });
 	    };
 	    Board.prototype.nextPlayerMakeAMove = function (element) {
@@ -111,9 +112,11 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var Blank_1 = __webpack_require__(3);
 	var Position = (function () {
 	    function Position(size) {
 	        this.size = size;
@@ -133,7 +136,6 @@
 	        return this.values[x.toString() + y.toString()];
 	    };
 	    Position.prototype.thereIsAWinner = function () {
-	        console.log('thereisawinner');
 	        if (this.checkRows()) {
 	            return true;
 	        }
@@ -143,28 +145,47 @@
 	        return this.checkDiagonals();
 	    };
 	    Position.prototype.checkRows = function () {
-	        console.log('checkRows');
 	        for (var i = 0; i < this.size; i++) {
-	            var equals = true;
-	            var value = this.values[i + "0"];
-	            console.log(value);
-	            for (var j = 1; j < this.size; j++) {
-	                if (value != this.values[i.toString() + j.toString()]) {
-	                    equals = false;
-	                }
-	                console.log(typeof value);
+	            var positions = [];
+	            for (var j = 0; j < this.size; j++) {
+	                positions.push(i.toString() + j.toString());
 	            }
-	            if (equals && typeof value !== 'Blank') {
+	            if (this.check(positions))
 	                return true;
-	            }
 	        }
 	        return false;
 	    };
 	    Position.prototype.checkCols = function () {
+	        for (var i = 0; i < this.size; i++) {
+	            var positions = [];
+	            for (var j = 0; j < this.size; j++) {
+	                positions.push(j.toString() + i.toString());
+	            }
+	            if (this.check(positions))
+	                return true;
+	        }
 	        return false;
 	    };
 	    Position.prototype.checkDiagonals = function () {
-	        return false;
+	        var diagonals = {
+	            first: ['00', '11', '22'],
+	            second: ['02', '11', '20']
+	        };
+	        if (this.check(diagonals.first))
+	            return true;
+	        return this.check(diagonals.second);
+	    };
+	    Position.prototype.check = function (positions) {
+	        var hasWinner = true;
+	        var firstValue = this.values[positions[0]];
+	        for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+	            var position = positions_1[_i];
+	            var value = this.values[position];
+	            if (firstValue != value || value instanceof Blank_1.Blank) {
+	                hasWinner = false;
+	            }
+	        }
+	        return hasWinner;
 	    };
 	    return Position;
 	}());
@@ -176,6 +197,7 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Blank = (function () {
 	    function Blank() {
 	    }
@@ -192,6 +214,7 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Leaf = (function () {
 	    function Leaf() {
 	    }
@@ -208,6 +231,7 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Fire = (function () {
 	    function Fire() {
 	    }
@@ -224,6 +248,7 @@
 /***/ function(module, exports) {
 
 	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
 	var Player = (function () {
 	    function Player(one, two) {
 	        this.one = one;
