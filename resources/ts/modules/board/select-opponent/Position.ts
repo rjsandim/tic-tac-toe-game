@@ -28,20 +28,24 @@ export class Position {
         return this.values[x.toString() + y.toString()];
     }
 
-    public thereIsAWinner(): boolean {
+    public thereIsAWinner(): Type|boolean {
 
-        if (this.checkRows()) {
-            return true;
+        let winner = this.checkRows();
+
+        if (winner !== false) {
+            return winner;
         }
 
-        if (this.checkCols()) {
-            return true;
+        winner = this.checkCols();
+
+        if (winner !== false) {
+            return winner;
         }
 
         return this.checkDiagonals();
     }
 
-    private checkRows(): boolean {
+    private checkRows(): Type|boolean {
 
         for (let i = 0; i < this.size; i++) {
 
@@ -51,14 +55,16 @@ export class Position {
                 positions.push(i.toString() + j.toString());
             }
 
-            if (this.check(positions))
-                return true;
+            let result = this.check(positions);
+
+            if (result !== false)
+                return result;
         }
 
         return false;
     }
 
-    private checkCols(): boolean {
+    private checkCols(): Type|boolean {
 
         for (let i = 0; i < this.size; i++) {
 
@@ -68,27 +74,31 @@ export class Position {
                 positions.push(j.toString() + i.toString());
             }
 
-            if (this.check(positions))
-                return true;
+            let result = this.check(positions);
+
+            if (result !== false)
+                return result;
         }
 
         return false;
     }
 
-    private checkDiagonals(): boolean {
+    private checkDiagonals(): Type|boolean {
 
         let diagonals = {
             first: ['00', '11', '22'],
             second: ['02', '11', '20']
         };
 
-        if (this.check(diagonals.first))
-            return true;
+        let result = this.check(diagonals.first);
+
+        if (result !== false)
+            return result;
 
         return this.check(diagonals.second);
     }
 
-    private check(positions: any) {
+    private check(positions: any) : Type|boolean {
 
         let hasWinner = true;
         let firstValue = this.values[positions[0]];
@@ -102,7 +112,9 @@ export class Position {
             }
         }
 
-        return hasWinner;
+        if (hasWinner)
+            return <Type>firstValue;
+        return false;
     }
 
 }

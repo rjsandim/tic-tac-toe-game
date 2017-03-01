@@ -12,23 +12,18 @@ export class Player {
     }
 
     public toggle(): Type {
-
-        console.log(this.lastPlayer);
-
+        
         if (this.lastPlayer == null) {
             this.lastPlayer = this.randomPlayer();
             return this.lastPlayer;
         }
 
-        if (this.lastPlayer == this.one) {
-            this.lastPlayer = this.two;
-        } else {
-            this.lastPlayer = this.one;
-        }
+        this.lastPlayer = this.lastPlayer == this.one ? this.two : this.one;
+
         return this.lastPlayer;
     }
 
-    private randomPlayer() : Type {
+    private randomPlayer(): Type {
 
         let random = Math.floor(Math.random() * 2) + 1;
 

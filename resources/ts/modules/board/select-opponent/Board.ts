@@ -43,14 +43,19 @@ export class Board {
 
         $('.btn').click(function () {
 
-            _self.nextPlayerMakeAMove($(this));
+            let movement = _self.nextPlayerMakeAMove($(this));
+            _self.save(movement);
 
-            if (_self.positions.thereIsAWinner())
-                swal('Winner!');
+            let winner = _self.positions.thereIsAWinner();
+
+            if (typeof(winner) !== "boolean") {
+                //noinspection TypeScriptUnresolvedFunction
+                swal('Winner!', winner.getName());
+            }
         });
     }
 
-    private nextPlayerMakeAMove(element: JQuery) {
+    private nextPlayerMakeAMove(element: JQuery) : any {
         let parent = element.parent();
 
         let x = parent.data('x');
@@ -59,6 +64,8 @@ export class Board {
 
         this.positions.put(x, y, turn);
         this.renderAt(parent);
+
+        return {x: x, y: y, player: turn}
     }
 
     private renderAt(element: JQuery) {
@@ -69,6 +76,10 @@ export class Board {
         console.log(this.positions.getAt(x, y));
 
         element.empty().append(this.positions.getAt(x, y).render());
+    }
+
+    private save(movement) {
+        console.log(movement);
     }
 
 }

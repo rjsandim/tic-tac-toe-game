@@ -1,5 +1,8 @@
 import {Type} from "./Type";
 export class Blank implements Type {
+    getName() {
+        return 'None';
+    }
 
     constructor() {
 

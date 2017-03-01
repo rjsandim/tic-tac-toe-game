@@ -1,5 +1,8 @@
 import {Type} from "./Type";
 export class Fire implements Type {
+    getName() {
+        return 'Fire';
+    }
 
     constructor() {
 

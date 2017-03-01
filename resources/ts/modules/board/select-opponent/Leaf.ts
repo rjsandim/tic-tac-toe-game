@@ -1,5 +1,8 @@
 import {Type} from "./Type";
 export class Leaf implements Type {
+    getName() {
+        return 'Leaf';
+    }
 
     constructor() {
 

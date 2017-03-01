@@ -86,9 +86,13 @@
 	    Board.prototype.onClick = function () {
 	        var _self = this;
 	        $('.btn').click(function () {
-	            _self.nextPlayerMakeAMove($(this));
-	            if (_self.positions.thereIsAWinner())
-	                swal('Winner!');
+	            var movement = _self.nextPlayerMakeAMove($(this));
+	            _self.save(movement);
+	            var winner = _self.positions.thereIsAWinner();
+	            if (typeof (winner) !== "boolean") {
+	                //noinspection TypeScriptUnresolvedFunction
+	                swal('Winner!', winner.getName());
+	            }
 	        });
 	    };
 	    Board.prototype.nextPlayerMakeAMove = function (element) {
@@ -98,12 +102,16 @@
 	        var turn = this.player.toggle();
 	        this.positions.put(x, y, turn);
 	        this.renderAt(parent);
+	        return { x: x, y: y, player: turn };
 	    };
 	    Board.prototype.renderAt = function (element) {
 	        var x = element.data('x');
 	        var y = element.data('y');
 	        console.log(this.positions.getAt(x, y));
 	        element.empty().append(this.positions.getAt(x, y).render());
+	    };
+	    Board.prototype.save = function (movement) {
+	        console.log(movement);
 	    };
 	    return Board;
 	}());
@@ -136,11 +144,13 @@
 	        return this.values[x.toString() + y.toString()];
 	    };
 	    Position.prototype.thereIsAWinner = function () {
-	        if (this.checkRows()) {
-	            return true;
+	        var winner = this.checkRows();
+	        if (winner !== false) {
+	            return winner;
 	        }
-	        if (this.checkCols()) {
-	            return true;
+	        winner = this.checkCols();
+	        if (winner !== false) {
+	            return winner;
 	        }
 	        return this.checkDiagonals();
 	    };
@@ -150,8 +160,9 @@
 	            for (var j = 0; j < this.size; j++) {
 	                positions.push(i.toString() + j.toString());
 	            }
-	            if (this.check(positions))
-	                return true;
+	            var result = this.check(positions);
+	            if (result !== false)
+	                return result;
 	        }
 	        return false;
 	    };
@@ -161,8 +172,9 @@
 	            for (var j = 0; j < this.size; j++) {
 	                positions.push(j.toString() + i.toString());
 	            }
-	            if (this.check(positions))
-	                return true;
+	            var result = this.check(positions);
+	            if (result !== false)
+	                return result;
 	        }
 	        return false;
 	    };
@@ -171,8 +183,9 @@
 	            first: ['00', '11', '22'],
 	            second: ['02', '11', '20']
 	        };
-	        if (this.check(diagonals.first))
-	            return true;
+	        var result = this.check(diagonals.first);
+	        if (result !== false)
+	            return result;
 	        return this.check(diagonals.second);
 	    };
 	    Position.prototype.check = function (positions) {
@@ -185,7 +198,9 @@
 	                hasWinner = false;
 	            }
 	        }
-	        return hasWinner;
+	        if (hasWinner)
+	            return firstValue;
+	        return false;
 	    };
 	    return Position;
 	}());
@@ -201,6 +216,9 @@
 	var Blank = (function () {
 	    function Blank() {
 	    }
+	    Blank.prototype.getName = function () {
+	        return 'None';
+	    };
 	    Blank.prototype.render = function () {
 	        return '<span class="col-xs-12 btn btn-default gi-8x"aria-hidden="true">&nbsp;</span>';
 	    };
@@ -218,6 +236,9 @@
 	var Leaf = (function () {
 	    function Leaf() {
 	    }
+	    Leaf.prototype.getName = function () {
+	        return 'Leaf';
+	    };
 	    Leaf.prototype.render = function () {
 	        return '<span class="col-xs-12 btn btn-success glyphicon glyphicon-leaf gi-8x" aria-hidden="true"></span>';
 	    };
@@ -235,6 +256,9 @@
 	var Fire = (function () {
 	    function Fire() {
 	    }
+	    Fire.prototype.getName = function () {
+	        return 'Fire';
+	    };
 	    Fire.prototype.render = function () {
 	        return '<span class="col-xs-12 btn btn-danger glyphicon glyphicon-fire gi-8x" aria-hidden="true"></span>';
 	    };
@@ -256,17 +280,11 @@
 	        this.lastPlayer = null;
 	    }
 	    Player.prototype.toggle = function () {
-	        console.log(this.lastPlayer);
 	        if (this.lastPlayer == null) {
 	            this.lastPlayer = this.randomPlayer();
 	            return this.lastPlayer;
 	        }
-	        if (this.lastPlayer == this.one) {
-	            this.lastPlayer = this.two;
-	        }
-	        else {
-	            this.lastPlayer = this.one;
-	        }
+	        this.lastPlayer = this.lastPlayer == this.one ? this.two : this.one;
 	        return this.lastPlayer;
 	    };
 	    Player.prototype.randomPlayer = function () {
